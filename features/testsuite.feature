@@ -2,46 +2,44 @@ Feature: Testsuite test
 Quentin check whether their testsuite works properly.
 
   Scenario: Contains
-     When executing "crc start" succeeds
-     Then stdout should contain "Local OpenShift 4.0"
+     When executing "go help" succeeds
+     Then stdout should contain
+     """
+     Go is a tool for managing Go source code.
+     """
 
   Scenario: Not Contains
-     When executing "crc start" succeeds
-     Then stdout should not contain "Local OpenShift 3.0"
+     When executing "go help" succeeds
+     Then stdout should not contain "Error"
 
   Scenario: Equals
-     When executing "crc start" succeeds
-     Then stdout should equal
-     """
-     crc - Local OpenShift 4.0 clusters
-     """
-      And exitcode should equal "0"
+     When executing "go help" succeeds
+     Then exitcode should equal "0"
 
   Scenario: Not Equals
-     When executing "crc start" succeeds
-     Then stdout should not equal "crc - Local OpenShift 3.0 clusters"
-      And exitcode should not equal "1"
+     When executing "go notexist" fails
+     Then exitcode should not equal "0"
 
   Scenario: Matches
-     When executing "crc start" succeeds
-     Then stdout should match "Local OpenShift \d\.\d clusters"
+     When executing "go version" succeeds
+     Then stdout should match "go1\.\d+\.\d+"
 
   Scenario: Not Matches
-     When executing "crc start" succeeds
+     When executing "go version" succeeds
      Then stdout should not match "Local \d\.\d OpenShift clusters"
 
   Scenario: Is Empty
-     When executing "crc start" succeeds
+     When executing "go version" succeeds
      Then stderr should be empty
 
   Scenario: Is Not Empty
-     When executing "crc start" succeeds
+     When executing "go version" succeeds
      Then stdout should not be empty
 
   Scenario: Scenario Variables
-     When setting scenario variable "VAR" to the stdout from executing "echo value"
+     When setting scenario variable "VAR" to the stdout from executing "go version"
       And executing "echo $(VAR)" succeeds
-     Then stdout should contain "value"
+     Then stdout should contain "go version"
 
    Scenario: Create Directory and Files
       When creating directory "newdir" succeeds

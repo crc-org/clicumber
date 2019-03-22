@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  run-features:
+    working_directory: /go/src/github.com/agajdosi/clicumber
+    docker:
+      - image: circleci/golang:latest
+    steps:
+      - checkout
+      - run: dep ensure
+      - run: go test --tags=integration
+      
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - run-features
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - run-features
