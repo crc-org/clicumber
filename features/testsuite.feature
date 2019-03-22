@@ -54,6 +54,7 @@ Quentin check whether their testsuite works properly.
        And content of file "newdir/newfile" should not equal "192.168.15.512"
        And content of file "newdir/newfile" should match "192\.168\.\d+\.\d+"
        And content of file "newdir/newfile" should not match "192\.168\.\s+\.\d+"
+       And content of file "newdir/newfile" is valid "IP"
 
    Scenario: Delete file
       When deleting file "newdir/newfile" succeeds
