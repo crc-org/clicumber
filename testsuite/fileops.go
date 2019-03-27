@@ -43,7 +43,7 @@ func directoryShouldNotExist(dirName string) error {
 		return nil
 	}
 
-	return fmt.Errorf("Directory %s exists", dirName)
+	return fmt.Errorf("directory %s exists", dirName)
 }
 
 func fileShouldNotExist(fileName string) error {
@@ -51,13 +51,13 @@ func fileShouldNotExist(fileName string) error {
 		return nil
 	}
 
-	return fmt.Errorf("File %s exists", fileName)
+	return fmt.Errorf("file %s exists", fileName)
 }
 
 func getFileContent(path string) (string, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return "", fmt.Errorf("Cannot read file: %v", err)
+		return "", fmt.Errorf("cannot read file: %v", err)
 	}
 
 	return string(data), nil
@@ -128,7 +128,7 @@ func fileContentShouldContain(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualContains(expected, text)
+	return compareExpectedWithActualContains(expected, text)
 }
 
 func fileContentShouldNotContain(filePath string, expected string) error {
@@ -137,7 +137,7 @@ func fileContentShouldNotContain(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualNotContains(expected, text)
+	return compareExpectedWithActualNotContains(expected, text)
 }
 
 func fileContentShouldEqual(filePath string, expected string) error {
@@ -146,7 +146,7 @@ func fileContentShouldEqual(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualEquals(expected, text)
+	return compareExpectedWithActualEquals(expected, text)
 }
 
 func fileContentShouldNotEqual(filePath string, expected string) error {
@@ -155,7 +155,7 @@ func fileContentShouldNotEqual(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualNotEquals(expected, text)
+	return compareExpectedWithActualNotEquals(expected, text)
 }
 
 func fileContentShouldMatchRegex(filePath string, expected string) error {
@@ -164,7 +164,7 @@ func fileContentShouldMatchRegex(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualMatchesRegex(expected, text)
+	return compareExpectedWithActualMatchesRegex(expected, text)
 }
 
 func fileContentShouldNotMatchRegex(filePath string, expected string) error {
@@ -173,7 +173,7 @@ func fileContentShouldNotMatchRegex(filePath string, expected string) error {
 		return err
 	}
 
-	return CompareExpectedWithActualNotMatchesRegex(expected, text)
+	return compareExpectedWithActualNotMatchesRegex(expected, text)
 }
 
 func fileContentIsInValidFormat(filePath string, format string) error {
@@ -182,5 +182,5 @@ func fileContentIsInValidFormat(filePath string, format string) error {
 		return err
 	}
 
-	return CheckFormat(format, text)
+	return checkFormat(format, text)
 }

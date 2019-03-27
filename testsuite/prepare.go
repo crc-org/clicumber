@@ -26,6 +26,7 @@ import (
 	"github.com/agajdosi/clicumber/util"
 )
 
+//ParseFlags defines flags which are used by test suite.
 func ParseFlags() {
 	flag.StringVar(&testDir, "test-dir", "out", "Path to the directory in which to execute the tests")
 	flag.StringVar(&testWithShell, "test-shell", "", "Specifies shell to be used for the testing.")
@@ -45,7 +46,7 @@ func prepareForIntegrationTest() error {
 	if testDir == "" {
 		testDir, err = ioutil.TempDir("", "crc-integration-test-")
 		if err != nil {
-			return fmt.Errorf("Error creating temporary directory for test run: %v", err)
+			return fmt.Errorf("error creating temporary directory for test run: %v", err)
 		}
 	} else {
 		wd, err := os.Getwd()
@@ -56,7 +57,7 @@ func prepareForIntegrationTest() error {
 		testDir = filepath.Join(wd, testDir)
 		err = os.MkdirAll(testDir, os.ModePerm)
 		if err != nil {
-			return fmt.Errorf("Error creating directory for test run: %v", err)
+			return fmt.Errorf("error creating directory for test run: %v", err)
 		}
 	}
 
@@ -76,7 +77,7 @@ func prepareForIntegrationTest() error {
 
 	err = util.StartLog(testResultsDir)
 	if err != nil {
-		return fmt.Errorf("Error starting the log: %v", err)
+		return fmt.Errorf("error starting the log: %v", err)
 	}
 
 	err = os.Chdir(testRunDir)
@@ -93,7 +94,7 @@ func prepareForIntegrationTest() error {
 func prepareTestRunDir() error {
 	err := os.MkdirAll(testRunDir, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("Error creating directory for test run: %v", err)
+		return fmt.Errorf("error creating directory for test run: %v", err)
 	}
 
 	err = cleanTestRunDir()
@@ -123,7 +124,7 @@ func cleanTestRunDir() error {
 func prepareTestResultsDir() error {
 	err := os.MkdirAll(testResultsDir, os.ModePerm)
 	if err != nil {
-		fmt.Errorf("Error creating directory for test results: %v", err)
+		return fmt.Errorf("error creating directory for test results: %v", err)
 	}
 
 	return nil

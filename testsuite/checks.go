@@ -27,70 +27,70 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func CompareExpectedWithActualContains(expected string, actual string) error {
+func compareExpectedWithActualContains(expected string, actual string) error {
 	if !strings.Contains(actual, expected) {
-		return fmt.Errorf("Output did not match. Expected: '%s', Actual: '%s'", expected, actual)
+		return fmt.Errorf("output did not match. Expected: '%s', Actual: '%s'", expected, actual)
 	}
 
 	return nil
 }
 
-func CompareExpectedWithActualNotContains(notexpected string, actual string) error {
+func compareExpectedWithActualNotContains(notexpected string, actual string) error {
 	if strings.Contains(actual, notexpected) {
-		return fmt.Errorf("Output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
+		return fmt.Errorf("output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
 	}
 
 	return nil
 }
 
-func CompareExpectedWithActualEquals(expected string, actual string) error {
+func compareExpectedWithActualEquals(expected string, actual string) error {
 	if actual != expected {
-		return fmt.Errorf("Output did not match. Expected: '%s', Actual: '%s'", expected, actual)
+		return fmt.Errorf("output did not match. Expected: '%s', Actual: '%s'", expected, actual)
 	}
 
 	return nil
 }
 
-func CompareExpectedWithActualNotEquals(notexpected string, actual string) error {
+func compareExpectedWithActualNotEquals(notexpected string, actual string) error {
 	if actual == notexpected {
-		return fmt.Errorf("Output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
+		return fmt.Errorf("output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
 	}
 
 	return nil
 }
 
-func PerformRegexMatch(regex string, input string) (bool, error) {
+func performRegexMatch(regex string, input string) (bool, error) {
 	compRegex, err := regexp.Compile(regex)
 	if err != nil {
-		return false, fmt.Errorf("Expected value must be a valid regular expression statement: ", err)
+		return false, fmt.Errorf("expected value must be a valid regular expression statement: %v", err)
 	}
 
 	return compRegex.MatchString(input), nil
 }
 
-func CompareExpectedWithActualMatchesRegex(expected string, actual string) error {
-	matches, err := PerformRegexMatch(expected, actual)
+func compareExpectedWithActualMatchesRegex(expected string, actual string) error {
+	matches, err := performRegexMatch(expected, actual)
 	if err != nil {
 		return err
 	} else if !matches {
-		return fmt.Errorf("Output did not match. Expected: '%s', Actual: '%s'", expected, actual)
+		return fmt.Errorf("output did not match. Expected: '%s', Actual: '%s'", expected, actual)
 	}
 
 	return nil
 }
 
-func CompareExpectedWithActualNotMatchesRegex(notexpected string, actual string) error {
-	matches, err := PerformRegexMatch(notexpected, actual)
+func compareExpectedWithActualNotMatchesRegex(notexpected string, actual string) error {
+	matches, err := performRegexMatch(notexpected, actual)
 	if err != nil {
 		return err
 	} else if matches {
-		return fmt.Errorf("Output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
+		return fmt.Errorf("output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
 	}
 
 	return nil
 }
 
-func CheckFormat(format string, actual string) error {
+func checkFormat(format string, actual string) error {
 	actual = strings.TrimRight(actual, "\n")
 	var err error
 	switch format {
@@ -103,7 +103,7 @@ func CheckFormat(format string, actual string) error {
 	case "YAML":
 		_, err = validateYAML(actual)
 	default:
-		return fmt.Errorf("Format %s not implemented.", format)
+		return fmt.Errorf("format %s not implemented", format)
 	}
 
 	return err
@@ -129,13 +129,13 @@ func validateURL(inputString string) (bool, error) {
 func validateIPWithPort(inputString string) (bool, error) {
 	split := strings.Split(inputString, ":")
 	if len(split) != 2 {
-		return false, fmt.Errorf("String '%s' does not contain one ':' separator", inputString)
+		return false, fmt.Errorf("string '%s' does not contain one ':' separator", inputString)
 	}
 	if _, err := strconv.Atoi(split[1]); err != nil {
-		return false, fmt.Errorf("Port must be an integer, in '%s' the port '%s' is not an integer. Conversion error: %v", inputString, split[1], err)
+		return false, fmt.Errorf("port must be an integer, in '%s' the port '%s' is not an integer. Conversion error: %v", inputString, split[1], err)
 	}
 	if net.ParseIP(split[0]) == nil {
-		return false, fmt.Errorf("In '%s' the IP part '%s' is not a valid IP address", inputString, split[0])
+		return false, fmt.Errorf("in '%s' the IP part '%s' is not a valid IP address", inputString, split[0])
 	}
 
 	return true, nil
@@ -145,7 +145,7 @@ func validateYAML(inputString string) (bool, error) {
 	m := make(map[interface{}]interface{})
 	err := yaml.Unmarshal([]byte(inputString), &m)
 	if err != nil {
-		return false, fmt.Errorf("Error unmarshaling YAML: %s. YAML='%s'", err, inputString)
+		return false, fmt.Errorf("error unmarshaling YAML: %s. YAML='%s'", err, inputString)
 	}
 
 	return true, nil

@@ -33,7 +33,6 @@ var (
 	testDefaultHome string
 	testWithShell   string
 
-	// Godog options
 	GodogFormat              string
 	GodogTags                string
 	GodogShowStepDefinitions bool
@@ -42,6 +41,7 @@ var (
 	GodogPaths               string
 )
 
+// FeatureContext defines godog.Suite steps for the test suite.
 func FeatureContext(s *godog.Suite) {
 	// Executing commands
 	s.Step(`^executing "(.*)"$`,

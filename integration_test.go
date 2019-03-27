@@ -43,7 +43,7 @@ func TestMain(m *testing.M) {
 }
 
 func getFeatureContext(s *godog.Suite) {
-	// loads step definitions from default Minishift integration tests
+	// load default step definitions of clicumber testsuite
 	testsuite.FeatureContext(s)
 
 	// here you can load additional step definitions, for example:
@@ -51,7 +51,7 @@ func getFeatureContext(s *godog.Suite) {
 }
 
 func parseFlags() {
-	// gets flag values used by Minishift integration testsuite
+	// get flag values for clicumber testsuite
 	testsuite.ParseFlags()
 
 	// here you can get additional flag values if needed, for example:
