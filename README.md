@@ -1,13 +1,19 @@
 # clicumber
 
-Ready to go cucumber steps for testing CLI tools. 
+Ready to go Cucumber testsuite for testing CLI tools.
 
 ## How to run
 
-To run the example features, execute:
+Make sure Godog package is available, you can install it by:
 
 ```
-go test --tags=integration
+go get github.com/DATA-DOG/godog
+```
+
+Then to run the example features, just execute:
+
+```
+go test
 ```
 
 ## How to use as package

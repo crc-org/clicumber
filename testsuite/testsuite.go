@@ -1,5 +1,3 @@
-// +build integration
-
 /*
 Copyright (C) 2019 Red Hat, Inc.
 
