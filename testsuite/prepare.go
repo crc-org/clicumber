@@ -1,5 +1,3 @@
-// +build integration
-
 /*
 Copyright (C) 2019 Red Hat, Inc.
 
@@ -32,12 +30,12 @@ func ParseFlags() {
 	flag.StringVar(&testDir, "test-dir", "out", "Path to the directory in which to execute the tests")
 	flag.StringVar(&testWithShell, "test-shell", "", "Specifies shell to be used for the testing.")
 
-	flag.StringVar(&GodogFormat, "format", "pretty", "Sets which format godog will use")
-	flag.StringVar(&GodogTags, "tags", "", "Tags for godog test")
-	flag.BoolVar(&GodogShowStepDefinitions, "definitions", false, "")
-	flag.BoolVar(&GodogStopOnFailure, "stop-on-failure ", false, "Stop when failure is found")
-	flag.BoolVar(&GodogNoColors, "no-colors", false, "Disable colors in godog output")
-	flag.StringVar(&GodogPaths, "paths", "./features", "")
+	flag.StringVar(&GodogFormat, "godog.format", "pretty", "Sets which format godog will use")
+	flag.StringVar(&GodogTags, "godog.tags", "", "Tags for godog test")
+	flag.BoolVar(&GodogShowStepDefinitions, "godog.definitions", false, "")
+	flag.BoolVar(&GodogStopOnFailure, "godog.stop-on-failure ", false, "Stop when failure is found")
+	flag.BoolVar(&GodogNoColors, "godog.no-colors", false, "Disable colors in godog output")
+	flag.StringVar(&GodogPaths, "godog.paths", "./features", "")
 
 	flag.Parse()
 }

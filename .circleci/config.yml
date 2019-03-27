@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: dep ensure
-      - run: go test --tags=integration
+      - run: go test
       
 workflows:
   version: 2
