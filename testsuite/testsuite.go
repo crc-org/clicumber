@@ -110,6 +110,8 @@ func FeatureContext(s *godog.Suite) {
 		directoryShouldNotExist)
 	s.Step(`^file "([^"]*)" should not exist$`,
 		fileShouldNotExist)
+	s.Step(`^file "([^"]*)" exists$`,
+		fileExist)
 	s.Step(`^file from "(.*)" is downloaded into location "(.*)"$`,
 		downloadFileIntoLocation)
 	s.Step(`^writing text "([^"]*)" to file "([^"]*)" succeeds$`,
@@ -130,6 +132,12 @@ func FeatureContext(s *godog.Suite) {
 		fileContentShouldNotMatchRegex)
 	s.Step(`^content of file "([^"]*)" (?:should be|is) valid "([^"]*)"$`,
 		fileContentIsInValidFormat)
+
+	// Config file content, JSON and YAML
+	s.Step(`"(JSON|YAML)" config file "(.*)" (contains|does not contain) key "(.*)" with value matching "(.*)"$`,
+		configFileContainsKeyMatchingValue)
+	s.Step(`"(JSON|YAML)" config file "(.*)" (contains|does not contain) key "(.*)"$`,
+		configFileContainsKey)
 
 	s.BeforeSuite(func() {
 		err := prepareForIntegrationTest()

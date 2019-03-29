@@ -1,0 +1,30 @@
+{
+  "url": "https://api.github.com/repos/openshift/origin/releases/4412902",
+  "assets_url": "https://api.github.com/repos/openshift/origin/releases/4412902/assets",
+  "upload_url": "https://uploads.github.com/repos/openshift/origin/releases/4412902/assets{?name,label}",
+  "html_url": "https://github.com/openshift/origin/releases/tag/v1.3.1",
+  "id": 4412902,
+  "tag_name": "v1.3.1",
+  "target_commitish": "master",
+  "name": "v1.3.1",
+  "draft": false,
+  "author": {
+    "login": "alice",
+    "id": 1163175,
+    "avatar_url": "https://avatars3.githubusercontent.com/u/1163175?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/smarterclayton",
+    "html_url": "https://github.com/smarterclayton",
+    "followers_url": "https://api.github.com/users/smarterclayton/followers",
+    "following_url": "https://api.github.com/users/smarterclayton/following{/other_user}",
+    "gists_url": "https://api.github.com/users/smarterclayton/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/smarterclayton/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/smarterclayton/subscriptions",
+    "organizations_url": "https://api.github.com/users/smarterclayton/orgs",
+    "repos_url": "https://api.github.com/users/smarterclayton/repos",
+    "events_url": "https://api.github.com/users/smarterclayton/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/smarterclayton/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}
