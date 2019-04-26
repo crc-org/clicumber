@@ -23,7 +23,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/agajdosi/clicumber/util"
+	"github.com/code-ready/clicumber/util"
 )
 
 //ParseFlags defines flags which are used by test suite.

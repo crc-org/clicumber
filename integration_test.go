@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/godog"
-	"github.com/agajdosi/clicumber/testsuite"
+	"github.com/code-ready/clicumber/testsuite"
 )
 
 func TestMain(m *testing.M) {
