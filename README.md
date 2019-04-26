@@ -4,13 +4,9 @@ Ready to go Cucumber testsuite for testing CLI tools.
 
 ## How to run
 
-Make sure Godog package is available, you can install it by:
+Clone this repository somewhere off the `GOPATH`.
 
-```
-go get github.com/DATA-DOG/godog
-```
-
-Then to run the example features, just execute:
+To run the example features, execute:
 
 ```
 go test
@@ -18,4 +14,4 @@ go test
 
 ## How to use as package
 
-To see basic example of how the import is done, please check out file `integration_test.go`.
+For a basic example of how the import is done, see the file `integration_test.go`.
