@@ -45,102 +45,102 @@ var (
 func FeatureContext(s *godog.Suite) {
 	// Executing commands
 	s.Step(`^executing "(.*)"$`,
-		executeCommand)
+		ExecuteCommand)
 	s.Step(`^executing "(.*)" (succeeds|fails)$`,
-		executeCommandSucceedsOrFails)
+		ExecuteCommandSucceedsOrFails)
 
 	// Command output verification
 	s.Step(`^(stdout|stderr|exitcode) (?:should contain|contains) "(.*)"$`,
-		commandReturnShouldContain)
+		CommandReturnShouldContain)
 	s.Step(`^(stdout|stderr|exitcode) (?:should contain|contains)$`,
-		commandReturnShouldContainContent)
+		CommandReturnShouldContainContent)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does) not contain "(.*)"$`,
-		commandReturnShouldNotContain)
+		CommandReturnShouldNotContain)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does not) contain$`,
-		commandReturnShouldNotContainContent)
+		CommandReturnShouldNotContainContent)
 
 	s.Step(`^(stdout|stderr|exitcode) (?:should equal|equals) "(.*)"$`,
-		commandReturnShouldEqual)
+		CommandReturnShouldEqual)
 	s.Step(`^(stdout|stderr|exitcode) (?:should equal|equals)$`,
-		commandReturnShouldEqualContent)
+		CommandReturnShouldEqualContent)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does) not equal "(.*)"$`,
-		commandReturnShouldNotEqual)
+		CommandReturnShouldNotEqual)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does) not equal$`,
-		commandReturnShouldNotEqualContent)
+		CommandReturnShouldNotEqualContent)
 
 	s.Step(`^(stdout|stderr|exitcode) (?:should match|matches) "(.*)"$`,
-		commandReturnShouldMatch)
+		CommandReturnShouldMatch)
 	s.Step(`^(stdout|stderr|exitcode) (?:should match|matches)`,
-		commandReturnShouldMatchContent)
+		CommandReturnShouldMatchContent)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does) not match "(.*)"$`,
-		commandReturnShouldNotMatch)
+		CommandReturnShouldNotMatch)
 	s.Step(`^(stdout|stderr|exitcode) (?:should|does) not match`,
-		commandReturnShouldNotMatchContent)
+		CommandReturnShouldNotMatchContent)
 
 	s.Step(`^(stdout|stderr|exitcode) (?:should be|is) empty$`,
-		commandReturnShouldBeEmpty)
+		CommandReturnShouldBeEmpty)
 	s.Step(`^(stdout|stderr|exitcode) (?:should not be|is not) empty$`,
-		commandReturnShouldNotBeEmpty)
+		CommandReturnShouldNotBeEmpty)
 
 	s.Step(`^(stdout|stderr|exitcode) (?:should be|is) valid "([^"]*)"$`,
-		shouldBeInValidFormat)
+		ShouldBeInValidFormat)
 
 	// Command output and execution: extra steps
 	s.Step(`^with up to "(\d*)" retries with wait period of "(\d*(?:ms|s|m))" command "(.*)" output (?:should contain|contains) "(.*)"$`,
-		executeCommandWithRetry)
+		ExecuteCommandWithRetry)
 	s.Step(`^evaluating stdout of the previous command succeeds$`,
-		executeStdoutLineByLine)
+		ExecuteStdoutLineByLine)
 
 	// Scenario variables
 	// allows to set a scenario variable to the output values of minishift and oc commands
 	// and then refer to it by $(NAME_OF_VARIABLE) directly in the text of feature file
 	s.Step(`^setting scenario variable "(.*)" to the stdout from executing "(.*)"$`,
-		setScenarioVariableExecutingCommand)
+		SetScenarioVariableExecutingCommand)
 
 	// Filesystem operations
 	s.Step(`^creating directory "([^"]*)" succeeds$`,
-		createDirectory)
+		CreateDirectory)
 	s.Step(`^creating file "([^"]*)" succeeds$`,
-		createFile)
+		CreateFile)
 	s.Step(`^deleting directory "([^"]*)" succeeds$`,
-		deleteDirectory)
+		DeleteDirectory)
 	s.Step(`^deleting file "([^"]*)" succeeds$`,
-		deleteFile)
+		DeleteFile)
 	s.Step(`^directory "([^"]*)" should not exist$`,
-		directoryShouldNotExist)
+		DirectoryShouldNotExist)
 	s.Step(`^file "([^"]*)" should not exist$`,
-		fileShouldNotExist)
+		FileShouldNotExist)
 	s.Step(`^file "([^"]*)" exists$`,
-		fileExist)
+		FileExist)
 	s.Step(`^file from "(.*)" is downloaded into location "(.*)"$`,
-		downloadFileIntoLocation)
+		DownloadFileIntoLocation)
 	s.Step(`^writing text "([^"]*)" to file "([^"]*)" succeeds$`,
-		writeToFile)
+		WriteToFile)
 
 	// File content checks
 	s.Step(`^content of file "([^"]*)" should contain "([^"]*)"$`,
-		fileContentShouldContain)
+		FileContentShouldContain)
 	s.Step(`^content of file "([^"]*)" should not contain "([^"]*)"$`,
-		fileContentShouldNotContain)
+		FileContentShouldNotContain)
 	s.Step(`^content of file "([^"]*)" should equal "([^"]*)"$`,
-		fileContentShouldEqual)
+		FileContentShouldEqual)
 	s.Step(`^content of file "([^"]*)" should not equal "([^"]*)"$`,
-		fileContentShouldNotEqual)
+		FileContentShouldNotEqual)
 	s.Step(`^content of file "([^"]*)" should match "([^"]*)"$`,
-		fileContentShouldMatchRegex)
+		FileContentShouldMatchRegex)
 	s.Step(`^content of file "([^"]*)" should not match "([^"]*)"$`,
-		fileContentShouldNotMatchRegex)
+		FileContentShouldNotMatchRegex)
 	s.Step(`^content of file "([^"]*)" (?:should be|is) valid "([^"]*)"$`,
-		fileContentIsInValidFormat)
+		FileContentIsInValidFormat)
 
 	// Config file content, JSON and YAML
 	s.Step(`"(JSON|YAML)" config file "(.*)" (contains|does not contain) key "(.*)" with value matching "(.*)"$`,
-		configFileContainsKeyMatchingValue)
+		ConfigFileContainsKeyMatchingValue)
 	s.Step(`"(JSON|YAML)" config file "(.*)" (contains|does not contain) key "(.*)"$`,
-		configFileContainsKey)
+		ConfigFileContainsKey)
 
 	s.BeforeSuite(func() {
-		err := prepareForIntegrationTest()
+		err := PrepareForIntegrationTest()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -149,9 +149,9 @@ func FeatureContext(s *godog.Suite) {
 
 	s.BeforeFeature(func(this *gherkin.Feature) {
 		util.LogMessage("info", fmt.Sprintf("----- Feature: %s -----", this.Name))
-		startHostShellInstance(testWithShell)
+		StartHostShellInstance(testWithShell)
 		util.ClearScenarioVariables()
-		err := cleanTestRunDir()
+		err := CleanTestRunDir()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -182,7 +182,7 @@ func FeatureContext(s *godog.Suite) {
 
 	s.AfterFeature(func(this *gherkin.Feature) {
 		util.LogMessage("info", "----- Cleaning after feature -----")
-		closeHostShellInstance()
+		CloseHostShellInstance()
 	})
 
 	s.AfterSuite(func() {

@@ -27,7 +27,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func compareExpectedWithActualContains(expected string, actual string) error {
+func CompareExpectedWithActualContains(expected string, actual string) error {
 	if !strings.Contains(actual, expected) {
 		return fmt.Errorf("output did not match. Expected: '%s', Actual: '%s'", expected, actual)
 	}
@@ -35,7 +35,7 @@ func compareExpectedWithActualContains(expected string, actual string) error {
 	return nil
 }
 
-func compareExpectedWithActualNotContains(notexpected string, actual string) error {
+func CompareExpectedWithActualNotContains(notexpected string, actual string) error {
 	if strings.Contains(actual, notexpected) {
 		return fmt.Errorf("output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
 	}
@@ -43,7 +43,7 @@ func compareExpectedWithActualNotContains(notexpected string, actual string) err
 	return nil
 }
 
-func compareExpectedWithActualEquals(expected string, actual string) error {
+func CompareExpectedWithActualEquals(expected string, actual string) error {
 	if actual != expected {
 		return fmt.Errorf("output did not match. Expected: '%s', Actual: '%s'", expected, actual)
 	}
@@ -51,7 +51,7 @@ func compareExpectedWithActualEquals(expected string, actual string) error {
 	return nil
 }
 
-func compareExpectedWithActualNotEquals(notexpected string, actual string) error {
+func CompareExpectedWithActualNotEquals(notexpected string, actual string) error {
 	if actual == notexpected {
 		return fmt.Errorf("output did match. Not expected: '%s', Actual: '%s'", notexpected, actual)
 	}
@@ -59,7 +59,7 @@ func compareExpectedWithActualNotEquals(notexpected string, actual string) error
 	return nil
 }
 
-func performRegexMatch(regex string, input string) (bool, error) {
+func PerformRegexMatch(regex string, input string) (bool, error) {
 	compRegex, err := regexp.Compile(regex)
 	if err != nil {
 		return false, fmt.Errorf("expected value must be a valid regular expression statement: %v", err)
@@ -68,8 +68,8 @@ func performRegexMatch(regex string, input string) (bool, error) {
 	return compRegex.MatchString(input), nil
 }
 
-func compareExpectedWithActualMatchesRegex(expected string, actual string) error {
-	matches, err := performRegexMatch(expected, actual)
+func CompareExpectedWithActualMatchesRegex(expected string, actual string) error {
+	matches, err := PerformRegexMatch(expected, actual)
 	if err != nil {
 		return err
 	} else if !matches {
@@ -79,8 +79,8 @@ func compareExpectedWithActualMatchesRegex(expected string, actual string) error
 	return nil
 }
 
-func compareExpectedWithActualNotMatchesRegex(notexpected string, actual string) error {
-	matches, err := performRegexMatch(notexpected, actual)
+func CompareExpectedWithActualNotMatchesRegex(notexpected string, actual string) error {
+	matches, err := PerformRegexMatch(notexpected, actual)
 	if err != nil {
 		return err
 	} else if matches {
@@ -90,18 +90,18 @@ func compareExpectedWithActualNotMatchesRegex(notexpected string, actual string)
 	return nil
 }
 
-func checkFormat(format string, actual string) error {
+func CheckFormat(format string, actual string) error {
 	actual = strings.TrimRight(actual, "\n")
 	var err error
 	switch format {
 	case "URL":
-		_, err = validateURL(actual)
+		_, err = ValidateURL(actual)
 	case "IP":
-		_, err = validateIP(actual)
+		_, err = ValidateIP(actual)
 	case "IP with port number":
-		_, err = validateIPWithPort(actual)
+		_, err = ValidateIPWithPort(actual)
 	case "YAML":
-		_, err = validateYAML(actual)
+		_, err = ValidateYAML(actual)
 	default:
 		return fmt.Errorf("format %s not implemented", format)
 	}
@@ -109,7 +109,7 @@ func checkFormat(format string, actual string) error {
 	return err
 }
 
-func validateIP(inputString string) (bool, error) {
+func ValidateIP(inputString string) (bool, error) {
 	if net.ParseIP(inputString) == nil {
 		return false, fmt.Errorf("IP address '%s' is not a valid IP address", inputString)
 	}
@@ -117,7 +117,7 @@ func validateIP(inputString string) (bool, error) {
 	return true, nil
 }
 
-func validateURL(inputString string) (bool, error) {
+func ValidateURL(inputString string) (bool, error) {
 	_, err := url.ParseRequestURI(inputString)
 	if err != nil {
 		return false, fmt.Errorf("URL '%s' is not an URL in valid format. Parsing error: %v", inputString, err)
@@ -126,7 +126,7 @@ func validateURL(inputString string) (bool, error) {
 	return true, nil
 }
 
-func validateIPWithPort(inputString string) (bool, error) {
+func ValidateIPWithPort(inputString string) (bool, error) {
 	split := strings.Split(inputString, ":")
 	if len(split) != 2 {
 		return false, fmt.Errorf("string '%s' does not contain one ':' separator", inputString)
@@ -141,7 +141,7 @@ func validateIPWithPort(inputString string) (bool, error) {
 	return true, nil
 }
 
-func validateYAML(inputString string) (bool, error) {
+func ValidateYAML(inputString string) (bool, error) {
 	m := make(map[interface{}]interface{})
 	err := yaml.Unmarshal([]byte(inputString), &m)
 	if err != nil {
