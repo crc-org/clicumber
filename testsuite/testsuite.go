@@ -23,7 +23,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 
-	"github.com/agajdosi/clicumber/util"
+	"github.com/code-ready/clicumber/util"
 )
 
 var (

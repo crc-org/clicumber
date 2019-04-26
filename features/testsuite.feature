@@ -77,16 +77,16 @@ Quentin check whether their testsuite works properly.
 
    Examples: Config files contain keys
       | format | filename                   | property          | nonproperty | goodvalue  | badvalue |
-      | JSON   | ../../test/testconfig.json | author.login      | nonauthor   | alice      | bob      |
-      | JSON   | ../../test/testconfig.json | tag_name          | nontag      | v1.3.1     | v2.2.2   |
-      | JSON   | ../../test/testconfig.json | tag_name          | nontag      | v1\.\d+\.1 | v2.2.2   |
-      | YAML   | ../../test/testconfig.yml  | workflows.version | nonjobs     | zero       | one      |
-      | YAML   | ../../test/testconfig.yml  | version           | nonversion  | 2          | two      |
-      | YAML   | ../../test/testconfig.yml  | version           | nonversion  | \d+        | two      |
+      | JSON   | ../../testdata/testconfig.json | author.login      | nonauthor   | alice      | bob      |
+      | JSON   | ../../testdata/testconfig.json | tag_name          | nontag      | v1.3.1     | v2.2.2   |
+      | JSON   | ../../testdata/testconfig.json | tag_name          | nontag      | v1\.\d+\.1 | v2.2.2   |
+      | YAML   | ../../testdata/testconfig.yml  | workflows.version | nonjobs     | zero       | one      |
+      | YAML   | ../../testdata/testconfig.yml  | version           | nonversion  | 2          | two      |
+      | YAML   | ../../testdata/testconfig.yml  | version           | nonversion  | \d+        | two      |
 
    Scenario: Verify that key matching value exists in JSON config file
-      When file "../../test/testconfig.json" exists
+      When file "../../testdata/testconfig.json" exists
       # JSON package uses map[string]interface{} and []interface{} values to store various JSON objects
       # and arrays. It unmarshalls into 4 categories: bool, float64 (all numbers), string, nil.
       # Hence, id=4412902 needs to be given in float64 format to get a match:
-      Then "JSON" config file "../../test/testconfig.json" contains key "id" with value matching "4.412902e\+06"
+      Then "JSON" config file "../../testdata/testconfig.json" contains key "id" with value matching "4.412902e\+06"
