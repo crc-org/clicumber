@@ -43,10 +43,10 @@ const (
 )
 
 var (
-	shell shellInstance
+	shell ShellInstance
 )
 
-type shellInstance struct {
+type ShellInstance struct {
 	startArgument    []string
 	name             string
 	checkExitCodeCmd string
@@ -68,7 +68,7 @@ type shellInstance struct {
 	exitCodeChannel chan string
 }
 
-func (shell shellInstance) getLastCmdOutput(stdType string) string {
+func (shell ShellInstance) GetLastCmdOutput(stdType string) string {
 	var returnValue string
 	switch stdType {
 	case "stdout":
@@ -86,7 +86,7 @@ func (shell shellInstance) getLastCmdOutput(stdType string) string {
 	return returnValue
 }
 
-func (shell *shellInstance) scanPipe(scanner *bufio.Scanner, buffer *bytes.Buffer, stdType string, channel chan string) {
+func (shell *ShellInstance) ScanPipe(scanner *bufio.Scanner, buffer *bytes.Buffer, stdType string, channel chan string) {
 	for scanner.Scan() {
 		str := scanner.Text()
 		util.LogMessage(stdType, str)
@@ -102,7 +102,7 @@ func (shell *shellInstance) scanPipe(scanner *bufio.Scanner, buffer *bytes.Buffe
 	return
 }
 
-func (shell *shellInstance) configureTypeOfShell(shellName string) {
+func (shell *ShellInstance) ConfigureTypeOfShell(shellName string) {
 	switch shellName {
 	case "bash":
 		shell.name = shellName
@@ -141,15 +141,15 @@ func (shell *shellInstance) configureTypeOfShell(shellName string) {
 	return
 }
 
-func startHostShellInstance(shellName string) error {
-	return shell.start(shellName)
+func StartHostShellInstance(shellName string) error {
+	return shell.Start(shellName)
 }
 
-func (shell *shellInstance) start(shellName string) error {
+func (shell *ShellInstance) Start(shellName string) error {
 	var err error
 
 	if shell.name == "" {
-		shell.configureTypeOfShell(shellName)
+		shell.ConfigureTypeOfShell(shellName)
 	}
 	shell.stdoutChannel = make(chan string)
 	shell.stderrChannel = make(chan string)
@@ -175,8 +175,8 @@ func (shell *shellInstance) start(shellName string) error {
 	shell.outScanner = bufio.NewScanner(shell.outPipe)
 	shell.errScanner = bufio.NewScanner(shell.errPipe)
 
-	go shell.scanPipe(shell.outScanner, &shell.outbuf, "stdout", shell.stdoutChannel)
-	go shell.scanPipe(shell.errScanner, &shell.errbuf, "stderr", shell.stderrChannel)
+	go shell.ScanPipe(shell.outScanner, &shell.outbuf, "stdout", shell.stdoutChannel)
+	go shell.ScanPipe(shell.errScanner, &shell.errbuf, "stderr", shell.stderrChannel)
 
 	err = shell.instance.Start()
 	if err != nil {
@@ -187,11 +187,11 @@ func (shell *shellInstance) start(shellName string) error {
 	return err
 }
 
-func closeHostShellInstance() error {
-	return shell.close()
+func CloseHostShellInstance() error {
+	return shell.Close()
 }
 
-func (shell *shellInstance) close() error {
+func (shell *ShellInstance) Close() error {
 	closingCmd := "exit\n"
 	io.WriteString(shell.inPipe, closingCmd)
 	err := shell.instance.Wait()
@@ -204,7 +204,7 @@ func (shell *shellInstance) close() error {
 	return err
 }
 
-func executeCommand(command string) error {
+func ExecuteCommand(command string) error {
 	if shell.instance == nil {
 		return errors.New("shell instance is not started")
 	}
@@ -231,8 +231,8 @@ func executeCommand(command string) error {
 	return err
 }
 
-func executeCommandSucceedsOrFails(command string, expectedResult string) error {
-	err := executeCommand(command)
+func ExecuteCommandSucceedsOrFails(command string, expectedResult string) error {
+	err := ExecuteCommand(command)
 	if err != nil {
 		return err
 	}
@@ -249,7 +249,7 @@ func executeCommandSucceedsOrFails(command string, expectedResult string) error 
 	return err
 }
 
-func executeCommandWithRetry(retryCount int, retryTime string, command string, expected string) error {
+func ExecuteCommandWithRetry(retryCount int, retryTime string, command string, expected string) error {
 	var exitCode, stdout string
 	retryDuration, err := time.ParseDuration(retryTime)
 	if err != nil {
@@ -257,7 +257,7 @@ func executeCommandWithRetry(retryCount int, retryTime string, command string, e
 	}
 
 	for i := 0; i < retryCount; i++ {
-		err := executeCommand(command)
+		err := ExecuteCommand(command)
 		exitCode, stdout := shell.excbuf.String(), shell.outbuf.String()
 		if err == nil && exitCode == "0" && strings.Contains(stdout, expected) {
 			return nil
@@ -268,94 +268,94 @@ func executeCommandWithRetry(retryCount int, retryTime string, command string, e
 	return fmt.Errorf("command '%s', Expected: exitCode 0, stdout %s, Actual: exitCode %s, stdout %s", command, expected, exitCode, stdout)
 }
 
-func executeStdoutLineByLine() error {
+func ExecuteStdoutLineByLine() error {
 	var err error
-	stdout := shell.getLastCmdOutput("stdout")
+	stdout := shell.GetLastCmdOutput("stdout")
 	commandArray := strings.Split(stdout, "\n")
 	for index := range commandArray {
 		if !strings.Contains(commandArray[index], exitCodeIdentifier) {
-			err = executeCommand(commandArray[index])
+			err = ExecuteCommand(commandArray[index])
 		}
 	}
 
 	return err
 }
 
-func commandReturnShouldContain(commandField string, expected string) error {
-	return compareExpectedWithActualContains(expected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldContain(commandField string, expected string) error {
+	return CompareExpectedWithActualContains(expected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldContainContent(commandField string, expected *gherkin.DocString) error {
-	return compareExpectedWithActualContains(expected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldContainContent(commandField string, expected *gherkin.DocString) error {
+	return CompareExpectedWithActualContains(expected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotContain(commandField string, notexpected string) error {
-	return compareExpectedWithActualNotContains(notexpected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotContain(commandField string, notexpected string) error {
+	return CompareExpectedWithActualNotContains(notexpected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotContainContent(commandField string, notexpected *gherkin.DocString) error {
-	return compareExpectedWithActualNotContains(notexpected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotContainContent(commandField string, notexpected *gherkin.DocString) error {
+	return CompareExpectedWithActualNotContains(notexpected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldBeEmpty(commandField string) error {
-	return compareExpectedWithActualEquals("", shell.getLastCmdOutput(commandField))
+func CommandReturnShouldBeEmpty(commandField string) error {
+	return CompareExpectedWithActualEquals("", shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotBeEmpty(commandField string) error {
-	return compareExpectedWithActualNotEquals("", shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotBeEmpty(commandField string) error {
+	return CompareExpectedWithActualNotEquals("", shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldEqual(commandField string, expected string) error {
-	return compareExpectedWithActualEquals(expected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldEqual(commandField string, expected string) error {
+	return CompareExpectedWithActualEquals(expected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldEqualContent(commandField string, expected *gherkin.DocString) error {
-	return compareExpectedWithActualEquals(expected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldEqualContent(commandField string, expected *gherkin.DocString) error {
+	return CompareExpectedWithActualEquals(expected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotEqual(commandField string, expected string) error {
-	return compareExpectedWithActualNotEquals(expected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotEqual(commandField string, expected string) error {
+	return CompareExpectedWithActualNotEquals(expected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotEqualContent(commandField string, expected *gherkin.DocString) error {
-	return compareExpectedWithActualNotEquals(expected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotEqualContent(commandField string, expected *gherkin.DocString) error {
+	return CompareExpectedWithActualNotEquals(expected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldMatch(commandField string, expected string) error {
-	return compareExpectedWithActualMatchesRegex(expected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldMatch(commandField string, expected string) error {
+	return CompareExpectedWithActualMatchesRegex(expected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldMatchContent(commandField string, expected *gherkin.DocString) error {
-	return compareExpectedWithActualMatchesRegex(expected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldMatchContent(commandField string, expected *gherkin.DocString) error {
+	return CompareExpectedWithActualMatchesRegex(expected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotMatch(commandField string, expected string) error {
-	return compareExpectedWithActualNotMatchesRegex(expected, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotMatch(commandField string, expected string) error {
+	return CompareExpectedWithActualNotMatchesRegex(expected, shell.GetLastCmdOutput(commandField))
 }
 
-func commandReturnShouldNotMatchContent(commandField string, expected *gherkin.DocString) error {
-	return compareExpectedWithActualNotMatchesRegex(expected.Content, shell.getLastCmdOutput(commandField))
+func CommandReturnShouldNotMatchContent(commandField string, expected *gherkin.DocString) error {
+	return CompareExpectedWithActualNotMatchesRegex(expected.Content, shell.GetLastCmdOutput(commandField))
 }
 
-func shouldBeInValidFormat(commandField string, format string) error {
-	return checkFormat(format, shell.getLastCmdOutput(commandField))
+func ShouldBeInValidFormat(commandField string, format string) error {
+	return CheckFormat(format, shell.GetLastCmdOutput(commandField))
 }
 
-func setScenarioVariableExecutingCommand(variableName string, command string) error {
-	err := executeCommand(command)
+func SetScenarioVariableExecutingCommand(variableName string, command string) error {
+	err := ExecuteCommand(command)
 	if err != nil {
 		return err
 	}
 
-	commandFailed := (shell.getLastCmdOutput("exitcode") != "0" || len(shell.getLastCmdOutput("stderr")) != 0)
+	commandFailed := (shell.GetLastCmdOutput("exitcode") != "0" || len(shell.GetLastCmdOutput("stderr")) != 0)
 	if commandFailed {
 		return fmt.Errorf("command '%v' did not execute successfully. cmdExit: %v, cmdErr: %v",
 			command,
-			shell.getLastCmdOutput("exitcode"),
-			shell.getLastCmdOutput("stderr"))
+			shell.GetLastCmdOutput("exitcode"),
+			shell.GetLastCmdOutput("stderr"))
 	}
 
-	stdout := shell.getLastCmdOutput("stdout")
+	stdout := shell.GetLastCmdOutput("stdout")
 	util.SetScenarioVariable(variableName, strings.TrimSpace(stdout))
 
 	return nil

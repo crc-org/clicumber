@@ -41,7 +41,7 @@ func ParseFlags() {
 	flag.Parse()
 }
 
-func prepareForIntegrationTest() error {
+func PrepareForIntegrationTest() error {
 	var err error
 	if testDir == "" {
 		testDir, err = ioutil.TempDir("", "crc-integration-test-")
@@ -65,12 +65,12 @@ func prepareForIntegrationTest() error {
 	testResultsDir = filepath.Join(testDir, "test-results")
 	testDefaultHome = filepath.Join(testRunDir, ".crc")
 
-	err = prepareTestRunDir()
+	err = PrepareTestRunDir()
 	if err != nil {
 		return err
 	}
 
-	prepareTestResultsDir()
+	PrepareTestResultsDir()
 	if err != nil {
 		return err
 	}
@@ -91,13 +91,13 @@ func prepareForIntegrationTest() error {
 	return nil
 }
 
-func prepareTestRunDir() error {
+func PrepareTestRunDir() error {
 	err := os.MkdirAll(testRunDir, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("error creating directory for test run: %v", err)
 	}
 
-	err = cleanTestRunDir()
+	err = CleanTestRunDir()
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func prepareTestRunDir() error {
 	return nil
 }
 
-func cleanTestRunDir() error {
+func CleanTestRunDir() error {
 	files, err := ioutil.ReadDir(testRunDir)
 	if err != nil {
 		return err
@@ -121,7 +121,7 @@ func cleanTestRunDir() error {
 	return nil
 }
 
-func prepareTestResultsDir() error {
+func PrepareTestResultsDir() error {
 	err := os.MkdirAll(testResultsDir, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("error creating directory for test results: %v", err)

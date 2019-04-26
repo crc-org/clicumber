@@ -30,19 +30,19 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func createDirectory(dirName string) error {
+func CreateDirectory(dirName string) error {
 	return os.MkdirAll(dirName, 0777)
 }
 
-func deleteDirectory(dirName string) error {
+func DeleteDirectory(dirName string) error {
 	return os.RemoveAll(dirName)
 }
 
-func deleteFile(fileName string) error {
+func DeleteFile(fileName string) error {
 	return os.RemoveAll(fileName)
 }
 
-func directoryShouldNotExist(dirName string) error {
+func DirectoryShouldNotExist(dirName string) error {
 	if _, err := os.Stat(dirName); os.IsNotExist(err) {
 		return nil
 	}
@@ -50,7 +50,7 @@ func directoryShouldNotExist(dirName string) error {
 	return fmt.Errorf("directory %s exists", dirName)
 }
 
-func fileShouldNotExist(fileName string) error {
+func FileShouldNotExist(fileName string) error {
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		return nil
 	}
@@ -58,7 +58,7 @@ func fileShouldNotExist(fileName string) error {
 	return fmt.Errorf("file %s exists", fileName)
 }
 
-func fileExist(fileName string) error {
+func FileExist(fileName string) error {
 
 	_, err := os.Stat(fileName)
 
@@ -70,7 +70,7 @@ func fileExist(fileName string) error {
 	return nil // == err
 }
 
-func getFileContent(path string) (string, error) {
+func GetFileContent(path string) (string, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return "", fmt.Errorf("cannot read file: %v", err)
@@ -79,7 +79,7 @@ func getFileContent(path string) (string, error) {
 	return string(data), nil
 }
 
-func createFile(fileName string) error {
+func CreateFile(fileName string) error {
 	_, err := os.Stat(fileName)
 	if os.IsNotExist(err) {
 		file, err := os.Create(fileName)
@@ -91,7 +91,7 @@ func createFile(fileName string) error {
 	return nil
 }
 
-func writeToFile(text string, fileName string) error {
+func WriteToFile(text string, fileName string) error {
 	file, err := os.OpenFile(fileName, os.O_RDWR, 0644)
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func writeToFile(text string, fileName string) error {
 	return nil
 }
 
-func downloadFileIntoLocation(downloadURL string, destinationFolder string) error {
+func DownloadFileIntoLocation(downloadURL string, destinationFolder string) error {
 	destinationFolder = filepath.Join(testRunDir, destinationFolder)
 	err := os.MkdirAll(destinationFolder, os.ModePerm)
 	if err != nil {
@@ -138,83 +138,83 @@ func downloadFileIntoLocation(downloadURL string, destinationFolder string) erro
 	return nil
 }
 
-func fileContentShouldContain(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldContain(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualContains(expected, text)
+	return CompareExpectedWithActualContains(expected, text)
 }
 
-func fileContentShouldNotContain(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldNotContain(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualNotContains(expected, text)
+	return CompareExpectedWithActualNotContains(expected, text)
 }
 
-func fileContentShouldEqual(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldEqual(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualEquals(expected, text)
+	return CompareExpectedWithActualEquals(expected, text)
 }
 
-func fileContentShouldNotEqual(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldNotEqual(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualNotEquals(expected, text)
+	return CompareExpectedWithActualNotEquals(expected, text)
 }
 
-func fileContentShouldMatchRegex(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldMatchRegex(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualMatchesRegex(expected, text)
+	return CompareExpectedWithActualMatchesRegex(expected, text)
 }
 
-func fileContentShouldNotMatchRegex(filePath string, expected string) error {
-	text, err := getFileContent(filePath)
+func FileContentShouldNotMatchRegex(filePath string, expected string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return compareExpectedWithActualNotMatchesRegex(expected, text)
+	return CompareExpectedWithActualNotMatchesRegex(expected, text)
 }
 
-func fileContentIsInValidFormat(filePath string, format string) error {
-	text, err := getFileContent(filePath)
+func FileContentIsInValidFormat(filePath string, format string) error {
+	text, err := GetFileContent(filePath)
 	if err != nil {
 		return err
 	}
 
-	return checkFormat(format, text)
+	return CheckFormat(format, text)
 }
 
 // --------------- CONFIG functions from minishift
 
-func configFileContainsKeyMatchingValue(format string, configPath string, condition string, keyPath string, expectedValue string) error {
-	config, err := getFileContent(configPath)
+func ConfigFileContainsKeyMatchingValue(format string, configPath string, condition string, keyPath string, expectedValue string) error {
+	config, err := GetFileContent(configPath)
 	if err != nil {
 		return err
 	}
 
-	keyValue, err := getConfigKeyValue([]byte(config), format, keyPath)
+	keyValue, err := GetConfigKeyValue([]byte(config), format, keyPath)
 	if err != nil {
 		return err
 	}
 
-	matches, err := performRegexMatch(expectedValue, keyValue)
+	matches, err := PerformRegexMatch(expectedValue, keyValue)
 	if err != nil {
 		return err
 	} else if (condition == "contains") && !matches {
@@ -226,13 +226,13 @@ func configFileContainsKeyMatchingValue(format string, configPath string, condit
 	return nil
 }
 
-func configFileContainsKey(format string, configPath string, condition string, keyPath string) error {
-	config, err := getFileContent(configPath)
+func ConfigFileContainsKey(format string, configPath string, condition string, keyPath string) error {
+	config, err := GetFileContent(configPath)
 	if err != nil {
 		return err
 	}
 
-	keyValue, err := getConfigKeyValue([]byte(config), format, keyPath)
+	keyValue, err := GetConfigKeyValue([]byte(config), format, keyPath)
 	if err != nil {
 		return err
 	}
@@ -246,7 +246,7 @@ func configFileContainsKey(format string, configPath string, condition string, k
 	return nil
 }
 
-func getConfigKeyValue(configData []byte, format string, keyPath string) (string, error) {
+func GetConfigKeyValue(configData []byte, format string, keyPath string) (string, error) {
 	var err error
 	var keyValue string
 	var values map[string]interface{}
