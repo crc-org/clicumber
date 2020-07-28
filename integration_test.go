@@ -21,7 +21,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 	"github.com/code-ready/clicumber/testsuite"
 )
 
