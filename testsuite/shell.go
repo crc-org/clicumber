@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cucumber/messages-go/v10"
 	"github.com/code-ready/clicumber/util"
+	"github.com/cucumber/messages-go/v10"
 )
 
 const (
@@ -48,7 +48,7 @@ var (
 
 type ShellInstance struct {
 	startArgument    []string
-	name             string
+	Name             string
 	checkExitCodeCmd string
 
 	instance *exec.Cmd
@@ -105,34 +105,34 @@ func (shell *ShellInstance) ScanPipe(scanner *bufio.Scanner, buffer *bytes.Buffe
 func (shell *ShellInstance) ConfigureTypeOfShell(shellName string) {
 	switch shellName {
 	case "bash":
-		shell.name = shellName
+		shell.Name = shellName
 		shell.checkExitCodeCmd = fmt.Sprintf(bashExitCodeCheck, exitCodeIdentifier)
 	case "tcsh":
-		shell.name = shellName
+		shell.Name = shellName
 		shell.checkExitCodeCmd = fmt.Sprintf(tcshExitCodeCheck, exitCodeIdentifier)
 	case "zsh":
-		shell.name = shellName
+		shell.Name = shellName
 		shell.checkExitCodeCmd = fmt.Sprintf(zshExitCodeCheck, exitCodeIdentifier)
 	case "cmd":
-		shell.name = shellName
+		shell.Name = shellName
 		shell.checkExitCodeCmd = fmt.Sprintf(cmdExitCodeCheck, exitCodeIdentifier)
 	case "powershell":
-		shell.name = shellName
+		shell.Name = shellName
 		shell.startArgument = []string{"-Command", "-"}
 		shell.checkExitCodeCmd = fmt.Sprintf(powershellExitCodeCheck, exitCodeIdentifier)
 	case "fish":
 		fmt.Println("Fish shell is currently not supported by integration tests. Default shell for the OS will be used.")
 		fallthrough
 	default:
-		if shell.name != "" {
-			fmt.Printf("Shell %v is not supported, will set the default shell for the OS to be used.\n", shell.name)
+		if shell.Name != "" {
+			fmt.Printf("Shell %v is not supported, will set the default shell for the OS to be used.\n", shell.Name)
 		}
 		switch runtime.GOOS {
 		case "darwin", "linux":
-			shell.name = "bash"
+			shell.Name = "bash"
 			shell.checkExitCodeCmd = fmt.Sprintf(bashExitCodeCheck, exitCodeIdentifier)
 		case "windows":
-			shell.name = "powershell"
+			shell.Name = "powershell"
 			shell.startArgument = []string{"-Command", "-"}
 			shell.checkExitCodeCmd = fmt.Sprintf(powershellExitCodeCheck, exitCodeIdentifier)
 		}
@@ -148,14 +148,14 @@ func StartHostShellInstance(shellName string) error {
 func (shell *ShellInstance) Start(shellName string) error {
 	var err error
 
-	if shell.name == "" {
+	if shell.Name == "" {
 		shell.ConfigureTypeOfShell(shellName)
 	}
 	shell.stdoutChannel = make(chan string)
 	shell.stderrChannel = make(chan string)
 	shell.exitCodeChannel = make(chan string)
 
-	shell.instance = exec.Command(shell.name, shell.startArgument...)
+	shell.instance = exec.Command(shell.Name, shell.startArgument...)
 
 	shell.outPipe, err = shell.instance.StdoutPipe()
 	if err != nil {
@@ -183,7 +183,7 @@ func (shell *ShellInstance) Start(shellName string) error {
 		return err
 	}
 
-	fmt.Printf("The %v instance has been started and will be used for testing.\n", shell.name)
+	fmt.Printf("The %v instance has been started and will be used for testing.\n", shell.Name)
 	return err
 }
 
@@ -213,7 +213,7 @@ func ExecuteCommand(command string) error {
 	shell.errbuf.Reset()
 	shell.excbuf.Reset()
 
-	util.LogMessage(shell.name, command)
+	util.LogMessage(shell.Name, command)
 
 	_, err := io.WriteString(shell.inPipe, command+"\n")
 	if err != nil {
