@@ -66,7 +66,7 @@ type ShellInstance struct {
 	exitCodeChannel chan string
 }
 
-func (shell ShellInstance) GetLastCmdOutput(stdType string) string {
+func (shell *ShellInstance) GetLastCmdOutput(stdType string) string {
 	var returnValue string
 	switch stdType {
 	case "stdout":
