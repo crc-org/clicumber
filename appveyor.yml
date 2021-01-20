@@ -4,4 +4,4 @@ environment:
   GOPATH: c:\gopath
 stack: go 1.14
 test_script:
-  - go test
+  - go test --godog.tags=windows
