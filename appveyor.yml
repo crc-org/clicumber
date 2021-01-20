@@ -1,0 +1,7 @@
+build: off
+clone_folder: c:\gopath\src\github.com\code-ready\clicumber
+environment:
+  GOPATH: c:\gopath
+stack: go 1.14
+test_script:
+  - go test
