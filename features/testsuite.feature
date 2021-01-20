@@ -45,7 +45,7 @@ Quentin check whether their testsuite works properly.
       When creating directory "newdir" succeeds
        And creating file "newdir/newfile" succeeds
        And file from "https://google.com" is downloaded into location "newdir"
-      
+
    Scenario: File Content Checks
       When writing text "192.168.15.17" to file "newdir/newfile" succeeds
       Then content of file "newdir/newfile" should contain "168"
