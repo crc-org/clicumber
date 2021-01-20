@@ -1,19 +1,42 @@
+## Circleci version
 version: 2
+
+## Machine specific variable
 jobs:
-  run-features:
-    working_directory: /go/src/github.com/code-ready/clicumber
-    docker:
-      - image: circleci/golang:latest
+  run-feature-mac:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      GOVERSION: "1.14.13"
     steps:
-      - checkout
-      - run: dep ensure
-      - run: go test
+    - checkout
+    - run:
+        name: Configure GOPATH
+        command: echo 'export GOPATH=$HOME/go' >> $BASH_ENV
+    - run:
+        name: Configure Path
+        command: echo 'export PATH=$GOPATH/bin:/usr/local/go/bin/:$PATH' >> $BASH_ENV
+    - run:
+        name: Cleanup GOROOT
+        command: sudo rm -rf /usr/local/go
+    - run:
+        name: Install go
+        command: curl https://dl.google.com/go/go${GOVERSION}.darwin-amd64.tar.gz | sudo tar -C /usr/local -xz
+    - run:
+        name: List go version
+        command: go version
+    - run:
+        name: List go environment
+        command: go env
+    - run:
+        name: Run test
+        command: go test -race
       
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - run-features
+      - run-features-mac
   nightly:
     triggers:
       - schedule:
