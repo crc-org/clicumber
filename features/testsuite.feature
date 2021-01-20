@@ -8,6 +8,14 @@ Quentin check whether their testsuite works properly.
      Go is a tool for managing Go source code.
      """
 
+  Scenario: Command which is not present
+    When executing "foobar" fails
+    Then exitcode should not equal "0"
+    Then stderr should contain
+     """
+     command not found
+     """
+
   Scenario: Not Contains
      When executing "go help" succeeds
      Then stdout should not contain "Error"
