@@ -18,6 +18,15 @@ Quentin check whether their testsuite works properly.
      command not found
      """
 
+  @windows
+  Scenario: Command which is not present
+    When executing "foobar" fails
+    Then exitcode should not equal "0"
+    Then stderr should contain
+     """
+     'foobar' is not recognized
+     """
+
   @linux @darwin @windows
   Scenario: Not Contains
      When executing "go help" succeeds
@@ -58,6 +67,12 @@ Quentin check whether their testsuite works properly.
      When setting scenario variable "VAR" to the stdout from executing "go version"
       And executing "echo $(VAR)" succeeds
      Then stdout should contain "go version"
+
+  @windows
+  Scenario: Scenario Variables
+    When setting scenario variable "VAR" to the stdout from executing "go version"
+    And executing "echo $(VAR)" succeeds
+    Then stdout should contain "version"
 
   @linux @darwin @windows
    Scenario: Create Directory and Files
