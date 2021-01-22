@@ -20,8 +20,7 @@ Quentin check whether their testsuite works properly.
 
   @windows
   Scenario: Command which is not present
-    When executing "foobar" fails
-    Then exitcode should not equal "0"
+    When executing "foobar" succeed
     Then stderr should contain
      """
      'foobar' is not recognized
