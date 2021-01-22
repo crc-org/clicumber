@@ -63,6 +63,24 @@ Quentin check whether their testsuite works properly.
      Then stdout should not be empty
 
   @linux @darwin
+  Scenario: Able to use defined variable
+    When executing "VAR=$(echo 'hello')" succeeds
+     And executing "echo $VAR" succeeds
+    Then stdout should contain
+    """
+    hello
+    """
+
+  @windows
+  Scenario: Able to use defined variable
+    When executing "$Env:POD = $(echo 'hello')" succeeds
+    And executing "echo $Env:POD" succeeds
+    Then stdout should contain
+    """
+    hello
+    """
+
+  @linux @darwin
   Scenario: Scenario Variables
      When setting scenario variable "VAR" to the stdout from executing "go version"
       And executing "echo $(VAR)" succeeds
