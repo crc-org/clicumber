@@ -21,8 +21,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/code-ready/clicumber/testsuite"
 	"github.com/cucumber/godog"
+	"github.com/code-ready/clicumber/testsuite"
 )
 
 func TestMain(m *testing.M) {
