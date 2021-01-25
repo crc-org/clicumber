@@ -20,8 +20,7 @@ Quentin check whether their testsuite works properly.
 
   @windows
   Scenario: Command which is not present
-    When executing "foobar" fails
-    Then exitcode should not equal "0"
+    When executing "foobar" succeed
     Then stderr should contain
      """
      'foobar' is not recognized
@@ -61,6 +60,24 @@ Quentin check whether their testsuite works properly.
   Scenario: Is Not Empty
      When executing "go version" succeeds
      Then stdout should not be empty
+
+  @linux @darwin
+  Scenario: Able to use defined variable
+    When executing "VAR=$(echo 'hello')" succeeds
+     And executing "echo $VAR" succeeds
+    Then stdout should contain
+    """
+    hello
+    """
+
+  @windows
+  Scenario: Able to use defined variable
+    When executing "$Env:POD = $(echo 'hello')" succeeds
+    And executing "echo $Env:POD" succeeds
+    Then stdout should contain
+    """
+    hello
+    """
 
   @linux @darwin
   Scenario: Scenario Variables
