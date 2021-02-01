@@ -119,7 +119,7 @@ func (shell *ShellInstance) ConfigureTypeOfShell(shellName string) {
 		shell.startArgument = []string{"-Command", "-"}
 		shell.checkExitCodeCmd = fmt.Sprintf(powershellExitCodeCheck, exitCodeIdentifier)
 	case "fish":
-		fmt.Println("Fish shell is currently not supported by integration tests. Default shell for the OS will be used.")
+		fmt.Println("Fish shell is currently not supported by e2e tests. Default shell for the OS will be used.")
 		fallthrough
 	default:
 		if shell.name != "" {

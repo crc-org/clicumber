@@ -14,4 +14,4 @@ go test
 
 ## How to use as package
 
-For a basic example of how the import is done, see the file `integration_test.go`.
+For a basic example of how the import is done, see the file `e2e_test.go`.
