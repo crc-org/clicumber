@@ -3,7 +3,7 @@ version: 2
 
 ## Machine specific variable
 jobs:
-  run-feature-mac:
+  run-features-mac:
     macos:
       xcode: "10.0.0"
     environment:
@@ -31,7 +31,7 @@ jobs:
     - run:
         name: Run test
         command: go test -race
-      
+
 workflows:
   version: 2
   build_and_test:
@@ -46,4 +46,4 @@ workflows:
               only:
                 - master
     jobs:
-      - run-features
+      - run-features-mac
