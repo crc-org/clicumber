@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cucumber/godog"
-	"github.com/cucumber/messages-go/v10"
 	"github.com/code-ready/clicumber/util"
+	"github.com/cucumber/godog"
+	"github.com/cucumber/messages-go/v16"
 )
 
 var (
@@ -40,8 +40,47 @@ var (
 	GodogPaths               string
 )
 
-// FeatureContext defines godog.Suite steps for the test suite.
-func FeatureContext(s *godog.Suite) {
+func InitializeTestSuite(tctx *godog.TestSuiteContext) {
+	tctx.BeforeSuite(func() {
+		err := PrepareForE2eTest()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	})
+
+	tctx.AfterSuite(func() {
+		util.LogMessage("info", "----- Cleaning Up -----")
+		err := util.CloseLog()
+		if err != nil {
+			fmt.Println("Error closing the log:", err)
+		}
+	})
+}
+
+func InitializeScenario(s *godog.ScenarioContext) {
+
+	s.BeforeScenario(func(this *messages.Pickle) {
+		StartHostShellInstance(testWithShell)
+		util.ClearScenarioVariables()
+		err := CleanTestRunDir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		util.LogMessage("info", fmt.Sprintf("----- Scenario: %s -----", this.Name))
+		util.LogMessage("info", fmt.Sprintf("----- Scenario Outline: %s -----", this.Name))
+	})
+
+	s.BeforeStep(func(this *messages.PickleStep) {
+		this.Text = util.ProcessScenarioVariables(this.Text)
+	})
+
+	s.AfterScenario(func(*messages.Pickle, error) {
+		CloseHostShellInstance()
+	})
+
 	// Executing commands
 	s.Step(`^executing "(.*)"$`,
 		ExecuteCommand)
@@ -137,48 +176,4 @@ func FeatureContext(s *godog.Suite) {
 		ConfigFileContainsKeyMatchingValue)
 	s.Step(`"(JSON|YAML)" config file "(.*)" (contains|does not contain) key "(.*)"$`,
 		ConfigFileContainsKey)
-
-	s.BeforeSuite(func() {
-		err := PrepareForE2eTest()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	})
-
-	s.BeforeFeature(func(this *messages.GherkinDocument) {
-		util.LogMessage("info", fmt.Sprintf("----- Feature: %s -----", this.String()))
-		StartHostShellInstance(testWithShell)
-		util.ClearScenarioVariables()
-		err := CleanTestRunDir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	})
-
-	s.BeforeScenario(func(this *messages.Pickle) {
-		util.LogMessage("info", fmt.Sprintf("----- Scenario: %s -----", this.Name))
-		util.LogMessage("info", fmt.Sprintf("----- Scenario Outline: %s -----", this.String()))
-	})
-
-	s.BeforeStep(func(this *messages.Pickle_PickleStep) {
-		this.Text = util.ProcessScenarioVariables(this.Text)
-	})
-
-	s.AfterScenario(func(*messages.Pickle, error) {
-	})
-
-	s.AfterFeature(func(*messages.GherkinDocument) {
-		util.LogMessage("info", "----- Cleaning after feature -----")
-		CloseHostShellInstance()
-	})
-
-	s.AfterSuite(func() {
-		util.LogMessage("info", "----- Cleaning Up -----")
-		err := util.CloseLog()
-		if err != nil {
-			fmt.Println("Error closing the log:", err)
-		}
-	})
 }

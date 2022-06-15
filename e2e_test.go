@@ -21,39 +21,39 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cucumber/godog"
 	"github.com/code-ready/clicumber/testsuite"
+	"github.com/cucumber/godog"
+	"github.com/spf13/pflag"
 )
 
-func TestMain(m *testing.M) {
-	parseFlags()
+var opts = godog.Options{
+	Format:              testsuite.GodogFormat,
+	Paths:               strings.Split(testsuite.GodogPaths, ","),
+	Tags:                testsuite.GodogTags,
+	ShowStepDefinitions: testsuite.GodogShowStepDefinitions,
+	StopOnFailure:       testsuite.GodogStopOnFailure,
+	NoColors:            testsuite.GodogNoColors,
+}
 
-	status := godog.RunWithOptions("minishift", func(s *godog.Suite) {
-		getFeatureContext(s)
-	}, godog.Options{
-		Format:              testsuite.GodogFormat,
-		Paths:               strings.Split(testsuite.GodogPaths, ","),
-		Tags:                testsuite.GodogTags,
-		ShowStepDefinitions: testsuite.GodogShowStepDefinitions,
-		StopOnFailure:       testsuite.GodogStopOnFailure,
-		NoColors:            testsuite.GodogNoColors,
-	})
+func init() {
+	//testsuite.ParseFlags()
+
+	godog.BindCommandLineFlags("godog.", &opts) // godog v0.11.0 and later
+	//godog.BindCommandLineFlags("test.", &opts)  // godog v0.11.0 and later
+	//godog.BindCommandLineFlags("-", &opts) // godog v0.11.0 and later
+	testsuite.ParseFlags()
+}
+
+func TestMain(m *testing.M) {
+
+	pflag.Parse()
+
+	status := godog.TestSuite{
+		Name:                 "clicumber",
+		TestSuiteInitializer: testsuite.InitializeTestSuite,
+		ScenarioInitializer:  testsuite.InitializeScenario,
+		Options:              &opts,
+	}.Run()
 
 	os.Exit(status)
-}
-
-func getFeatureContext(s *godog.Suite) {
-	// load default step definitions of clicumber testsuite
-	testsuite.FeatureContext(s)
-
-	// here you can load additional step definitions, for example:
-	// mypackage.FeatureContext(s)
-}
-
-func parseFlags() {
-	// get flag values for clicumber testsuite
-	testsuite.ParseFlags()
-
-	// here you can get additional flag values if needed, for example:
-	// mypackage.ParseFlags()
 }

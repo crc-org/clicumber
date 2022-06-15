@@ -17,28 +17,29 @@ limitations under the License.
 package testsuite
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	"github.com/code-ready/clicumber/util"
+	"github.com/spf13/pflag"
 )
 
 //ParseFlags defines flags which are used by test suite.
 func ParseFlags() {
-	flag.StringVar(&testDir, "test-dir", "out", "Path to the directory in which to execute the tests")
-	flag.StringVar(&testWithShell, "test-shell", "", "Specifies shell to be used for the testing.")
 
-	flag.StringVar(&GodogFormat, "godog.format", "pretty", "Sets which format godog will use")
-	flag.StringVar(&GodogTags, "godog.tags", "", "Tags for godog test")
-	flag.BoolVar(&GodogShowStepDefinitions, "godog.definitions", false, "")
-	flag.BoolVar(&GodogStopOnFailure, "godog.stop-on-failure ", false, "Stop when failure is found")
-	flag.BoolVar(&GodogNoColors, "godog.no-colors", false, "Disable colors in godog output")
-	flag.StringVar(&GodogPaths, "godog.paths", "./features", "")
+	cliFlagSet := pflag.NewFlagSet("cliFlagSet", pflag.ExitOnError)
+	cliFlagSet.StringVar(&testDir, "test-dir", "out", "Path to the directory in which to execute the tests")
+	cliFlagSet.StringVar(&testWithShell, "test-shell", "", "Specifies shell to be used for the testing.")
 
-	flag.Parse()
+	cliFlagSet.StringVar(&GodogFormat, "godog.format", "pretty", "Sets which format godog will use")
+	cliFlagSet.StringVar(&GodogTags, "godog.tags", "", "Tags for godog test")
+	cliFlagSet.BoolVar(&GodogShowStepDefinitions, "godog.definitions", false, "")
+	cliFlagSet.BoolVar(&GodogStopOnFailure, "godog.stop-on-failure", false, "Stop when failure is found")
+	cliFlagSet.BoolVar(&GodogNoColors, "godog.no-colors", false, "Disable colors in godog output")
+	cliFlagSet.StringVar(&GodogPaths, "godog.paths", "./features", "")
+	pflag.CommandLine.AddFlagSet(cliFlagSet)
 }
 
 func PrepareForE2eTest() error {
